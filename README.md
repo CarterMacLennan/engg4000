@@ -1,4 +1,5 @@
 # Production Ready Web Application
+[![Node.js CI](https://github.com/Dubble-bubble-original/engg4000/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Dubble-bubble-original/engg4000/blob/dev/.github/workflows/main.yml)
 
 ## Contributors
 Nathaniel Caron\
