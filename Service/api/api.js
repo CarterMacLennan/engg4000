@@ -451,6 +451,42 @@ exports.deleteImage = async (req, res) => {
     });
 };
 
+exports.deleteImages = async (req, res) => {
+  // No request body provided
+  if (!req.body || !Object.keys(req.body).length) {
+    logger.info('No Request Body Provided');
+    return res.status(400).send({ message: 'No Request Body Provided' });
+  }
+
+  const { imageIds } = req.body;
+
+  if (!imageIds || !Array.isArray(imageIds)) {
+    logger.info('Missing Image IDs');
+    return res.status(400).send({ message: 'Missing Image IDs' });
+  }
+
+  if (imageIds.length > 5) {
+    logger.error('Two Many Image IDs Provided');
+    return res.status(404).send({ message: 'Two Many Image IDs Provided' });
+  }
+
+  await Promise.all(imageIds.map(async (fileKey) => {
+    const fileExists = await checkFile(fileKey);
+
+    if (!fileExists) {
+      logger.error('Image Does Not Exist');
+      return res.status(404).send({ message: 'Image Does Not Exist' });
+    }
+
+    deleteFile(fileKey)
+      .then(() => res.status(200).send({ message: 'Image Deleted Successfully' }))
+      .catch((err) => {
+        logger.error(err.message);
+        return res.status(500).send({ message: INTERNAL_SERVER_ERROR_MSG });
+      });
+  }));
+};
+
 exports.uploadPostImages = async (req, res) => {
   // Request body must contain at least one image
   if (!req.files || req.files.length < 1) {

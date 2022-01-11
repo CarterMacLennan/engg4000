@@ -119,6 +119,12 @@ if (ENV.NODE_ENV === 'dev') {
     USE(API.verifyAuthToken),
     USE(API.deleteImage)
   );
+
+  ROUTER.delete(
+    '/image',
+    USE(API.verifyAuthToken),
+    USE(API.deleteImages)
+  );
 }
 
 ROUTER.post(
